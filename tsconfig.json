@@ -10,6 +10,12 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
+    "paths": {
+      "ngx-mda-lib": [
+        "dist/ngx-mda-lib/ngx-mda-lib",
+        "dist/ngx-mda-lib"
+      ]
+    },
     "target": "es2015",
     "module": "es2020",
     "lib": [
