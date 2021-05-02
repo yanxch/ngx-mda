@@ -6,7 +6,7 @@ Is it still relevant?
 
 What should we are doing in the future?
 
-* *ngFor="let item of items" <div><h3>List Item Titel</h3></div>
+* *ngFor="let item of items" <div><h3>List Item Titel: {{item}} </h3>`test`</div>
 
 ```
 function test() {

@@ -1,31 +1,36 @@
 import { loader } from 'webpack';
 import * as html from 'remark-html';
 import * as remark from 'remark';
-// Problem: unist-util-visit is not a ESM Module ? ==> write your own?
-import { removePosition } from 'unist-util-remove-position';
+import * as handlers from 'mdast-util-to-hast/lib/handlers';
 
-const parentTransformer = (processor: any, options: any) => {
-    const transformer = (node) => {
+const visitNgFor = (listItem: any) => {
+    const transform = (node) => {
         if (node.children) {
             node.children.forEach((child) => {
-                child.parent = node.type;
+                if (child.type === 'text' && child.value.includes('ngFor')) {
+                    const ngForValue = child.value;
+                    child.value = ''; // remove from child
+                    listItem.type = 'angularListItem';
+                    listItem.value = ngForValue;
+                }
                 if (child.children) {
-                    transformer(child);
+                    transform(child);
                 }
             });
         }
-
-        return node;
     };
-
-    return transformer;
+    transform(listItem);
 };
 
 const listTransformer = (processor: any, options: any) => {
     const transformer = (node) => {
-        const list = node.children.filter((n) => n.type === 'list');
+        if (node.type === 'listItem') {
+            visitNgFor(node);
+        }
 
-        console.log('Found a list: ', JSON.stringify(list));
+        if (node.children) {
+            node.children.forEach((n) => transformer(n));
+        }
 
         return node;
     };
@@ -35,7 +40,6 @@ const listTransformer = (processor: any, options: any) => {
 
 const codeTransformer = (processor: any, options: any) => {
     const transformer = (node) => {
-        console.log('Node:', node);
         const codeDefs = node.children.filter((n) => n.type === 'code');
 
         codeDefs.forEach((n) => {
@@ -52,10 +56,26 @@ const codeTransformer = (processor: any, options: any) => {
 
 function transform(template: string) {
     const processor = remark()
-        .use(removePosition as any)
+        // .use(removePosition as any)
         .use(listTransformer as any)
         .use(codeTransformer as any)
-        .use(html);
+        .use(html, {
+            handlers: {
+                angularListItem: function (h, node) {
+                    console.log('Within custom angular list item handler!!', node);
+                    const result = handlers.listItem(h, node);
+
+                    result.properties = {
+                        ...result.properties,
+                        ['*ngFor']: (node as any).value.replace('*ngFor=', '').replace('"', '').replace('"', ''),
+                    };
+
+                    console.log(result);
+
+                    return result;
+                },
+            },
+        });
 
     const result = processor.processSync(template);
 
