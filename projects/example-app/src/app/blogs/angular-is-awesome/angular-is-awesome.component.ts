@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 export class AngularIsAwesomeComponent implements OnInit {
     items = ['one', 'two', 'three'];
 
+    show = true;
+
     constructor() {}
 
     ngOnInit(): void {}
