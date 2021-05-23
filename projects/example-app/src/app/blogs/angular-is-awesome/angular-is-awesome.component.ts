@@ -9,7 +9,7 @@ export class AngularIsAwesomeComponent implements OnInit {
 
     show = true;
 
-    constructor() {}
+    constructor() { }
 
-    ngOnInit(): void {}
+    ngOnInit(): void { }
 }
