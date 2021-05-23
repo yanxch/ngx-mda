@@ -5,7 +5,7 @@
     "module": "commonjs",
     "declaration": true,
     "skipLibCheck": true,
-    "outDir": "../../dist/ngx-mda-lib/plugin"
+    "outDir": "../../dist/ngx-mda-lib"
   },
-  "include": ["src/lib/plugin"]
+  "include": ["src/lib/plugin", "src/lib/loader", "src/lib/transformers"]
 }

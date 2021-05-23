@@ -7,9 +7,12 @@ module.exports = {
                 test: /\.md$/,
                 use: [
                     {
-                        loader: path.resolve(__dirname, './plugin/loader.js'),
+                        loader: path.resolve(__dirname, './loader/ngx-mda-loader.js'),
                         options: {
-                            transformers: [require('./plugin/listTransformer'), require('./plugin/codeTransformer')],
+                            transformers: [
+                                require('./transformers/listTransformer'),
+                                require('./transformers/codeTransformer'),
+                            ],
                         },
                     },
                     {
