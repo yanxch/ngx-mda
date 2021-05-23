@@ -2,80 +2,30 @@ import { loader } from 'webpack';
 import * as html from 'remark-html';
 import * as remark from 'remark';
 import * as handlers from 'mdast-util-to-hast/lib/handlers';
+import * as loaderUtils from 'loader-utils';
 
-const visitNgFor = (listItem: any) => {
-    const transform = (node) => {
-        if (node.children) {
-            node.children.forEach((child) => {
-                if (child.type === 'text' && child.value.includes('ngFor')) {
-                    const ngForValue = child.value;
-                    child.value = ''; // remove from child
-                    listItem.type = 'angularListItem';
-                    listItem.value = ngForValue;
-                }
-                if (child.children) {
-                    transform(child);
-                }
-            });
-        }
-    };
-    transform(listItem);
-};
+function transform(template: string, transformers: any[]) {
+    const processor = remark();
 
-const listTransformer = (processor: any, options: any) => {
-    const transformer = (node) => {
-        if (node.type === 'listItem') {
-            visitNgFor(node);
-        }
+    transformers.forEach((t) => processor.use(t.transform));
 
-        if (node.children) {
-            node.children.forEach((n) => transformer(n));
-        }
+    processor.use(html, {
+        handlers: {
+            angularListItem: function (h, node) {
+                console.log('Within custom angular list item handler!!', node);
+                const result = handlers.listItem(h, node);
 
-        return node;
-    };
+                result.properties = {
+                    ...result.properties,
+                    ['*ngFor']: (node as any).value.replace('*ngFor=', '').replace('"', '').replace('"', ''),
+                };
 
-    return transformer;
-};
+                console.log(result);
 
-const codeTransformer = (processor: any, options: any) => {
-    const transformer = (node) => {
-        const codeDefs = node.children.filter((n) => n.type === 'code');
-
-        codeDefs.forEach((n) => {
-            n.value = n.value.replace(/{/g, "{{ '{' @@");
-            n.value = n.value.replace(/}/g, "{{ '}' }}");
-            n.value = n.value.replace(/@@/g, '}}');
-        });
-
-        return node;
-    };
-
-    return transformer;
-};
-
-function transform(template: string) {
-    const processor = remark()
-        // .use(removePosition as any)
-        .use(listTransformer as any)
-        .use(codeTransformer as any)
-        .use(html, {
-            handlers: {
-                angularListItem: function (h, node) {
-                    console.log('Within custom angular list item handler!!', node);
-                    const result = handlers.listItem(h, node);
-
-                    result.properties = {
-                        ...result.properties,
-                        ['*ngFor']: (node as any).value.replace('*ngFor=', '').replace('"', '').replace('"', ''),
-                    };
-
-                    console.log(result);
-
-                    return result;
-                },
+                return result;
             },
-        });
+        },
+    });
 
     const result = processor.processSync(template);
 
@@ -84,10 +34,13 @@ function transform(template: string) {
 
 export default function transformHtmlLoader(source: string): string;
 export default function transformHtmlLoader(this: loader.LoaderContext, source: string): string {
+    const options = loaderUtils.getOptions(this);
+    console.log('MAH OPTIONS: ', options);
+
     // fetching content of export default "CONTENT"
     const regex = /(?<=((?<=[\s,.:;"']|^)["']))(?:(?=(\\?))\2.)*?(?=\1)/gmu; // lol driven development
     const match = source.match(regex);
-    const result = transform(match[0].replace(/\\n/g, '\n'));
+    const result = transform(match[0].replace(/\\n/g, '\n'), options.transformers);
     console.log('Result: ', result);
     return 'export default `' + result + '`';
 }

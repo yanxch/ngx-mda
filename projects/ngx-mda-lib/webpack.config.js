@@ -8,6 +8,9 @@ module.exports = {
                 use: [
                     {
                         loader: path.resolve(__dirname, './plugin/loader.js'),
+                        options: {
+                            transformers: [require('./plugin/listTransformer'), require('./plugin/codeTransformer')],
+                        },
                     },
                     {
                         loader: 'raw-loader',

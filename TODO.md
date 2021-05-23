@@ -5,15 +5,22 @@
   -- then I have probles with 3rd party libs that only come in esm style.
   -- I would need to setup a build for that i guess. I could enhance the webpack build, with the already exposed webpack.config.js but did not do 
 
-* ngFor for list-items is working (/) 
-* ngIf 
-  - how ?
-  - 
+* ngFor for list-items poc is working (/) 
+* ngIf (/)
+
+
+* Extensible / Plugin System
+  -- In JavaScript oder in TypeScript?
+  -- TypeScript ist schwieriger! ==> TypeScript ist heutzutage ein muss
+
+* Es geht nicht mit Windows
+  -- \n\r Problematik ?
+  
 * Typings
 * Tests
 * Schematics
 * Publish
 
-* Frontmatter?
+* Frontmatter
 
 * Custom Code Component?
