@@ -5,6 +5,7 @@ import * as handlers from 'mdast-util-to-hast/lib/handlers';
 import * as loaderUtils from 'loader-utils';
 
 function transform(template: string, transformers: any[]) {
+    console.log('Transform....', transformers);
     const processor = remark();
 
     transformers.forEach((t) => processor.use(t.transform));
