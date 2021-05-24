@@ -1,29 +1,17 @@
 import { loader } from 'webpack';
 import * as html from 'remark-html';
 import * as remark from 'remark';
-import * as handlers from 'mdast-util-to-hast/lib/handlers';
+
 import * as loaderUtils from 'loader-utils';
 
-function transform(template: string, transformers: any[]) {
+function transform(template: string, transformers: any[], customHandlers: {}) {
     const processor = remark();
 
     transformers.forEach((t) => processor.use(t.transform));
 
     processor.use(html, {
         handlers: {
-            angularListItem: function (h, node) {
-                console.log('Within custom angular list item handler!!', node);
-                const result = handlers.listItem(h, node);
-
-                result.properties = {
-                    ...result.properties,
-                    ['*ngFor']: (node as any).value.replace('*ngFor=', '').replace('"', '').replace('"', ''),
-                };
-
-                console.log(result);
-
-                return result;
-            },
+            ...customHandlers,
         },
     });
 
@@ -40,7 +28,7 @@ export default function transformHtmlLoader(this: loader.LoaderContext, source: 
     // fetching content of export default "CONTENT"
     const regex = /(?<=((?<=[\s,.:;"']|^)["']))(?:(?=(\\?))\2.)*?(?=\1)/gmu; // lol driven development
     const match = source.match(regex);
-    const result = transform(match[0].replace(/\\n/g, '\n'), options.transformers);
+    const result = transform(match[0].replace(/\\n/g, '\n'), options.transformers, options.handlers);
     console.log('Result: ', result);
     return 'export default `' + result + '`';
 }

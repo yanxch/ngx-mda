@@ -7,5 +7,5 @@
     "skipLibCheck": true,
     "outDir": "../../dist/ngx-mda-lib"
   },
-  "include": ["src/lib/plugin", "src/lib/loader", "src/lib/transformers"]
+  "include": ["src/lib/plugin", "src/lib/loader", "src/lib/transformers", "src/lib/handlers"]
 }

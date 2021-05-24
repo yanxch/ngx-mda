@@ -13,6 +13,9 @@ module.exports = {
                                 require('./transformers/listTransformer'),
                                 require('./transformers/codeTransformer'),
                             ],
+                            handlers: {
+                                angularListItem: require('./handlers/angularListItem').angularListItem,
+                            },
                         },
                     },
                     {
