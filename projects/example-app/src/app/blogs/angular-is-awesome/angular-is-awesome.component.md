@@ -4,14 +4,14 @@ Hello guys, this post is about Angular.
 
 Is it still relevant?
 
-What should we are doing in the future?
+What should we do in the future?
 
 Test
 
-<span>Test</span>
+<div *ngIf="show">Test 2</div>
 
 <div>
-Test
+Test 3
 </div> 
 
 

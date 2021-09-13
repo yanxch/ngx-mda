@@ -25,7 +25,7 @@ export default function transformHtmlLoader(this: loader.LoaderContext, source: 
     const options = loaderUtils.getOptions(this);
     console.log('MAH OPTIONS: ', options);
 
-    // fetching content of export default "CONTENT"
+    // fetching CONTENT from string >>export default "CONTENT"<<
     const regex = /(?<=((?<=[\s,.:;"']|^)["']))(?:(?=(\\?))\2.)*?(?=\1)/gmu; // lol driven development
     const match = source.match(regex);
     const result = transform(match[0].replace(/\\n/g, '\n'), options.transformers, options.handlers);

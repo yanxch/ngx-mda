@@ -7,10 +7,14 @@ const routes: Routes = [
         path: 'blog-1',
         component: AngularIsAwesomeComponent,
     },
+    {
+        path: '**',
+        component: AngularIsAwesomeComponent
+    }
 ];
 
 @NgModule({
     imports: [RouterModule.forRoot(routes)],
     exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
