@@ -10,18 +10,14 @@ Hello guys, this post is about Angular.
 
 Is it still relevant?
 
-What should we are doing in the future?
+What should we do in the future?
 
 Test
 
-<span *ngIf="show">
-
-Test
-
-</span>
+<div *ngIf="show">Test 2</div>
 
 <div>
-Test
+Test 3
 </div> 
 
 
@@ -29,11 +25,11 @@ Test
 
 * *ngFor="let item of items" <div><h3>List Item Titel: {{item}} </h3>`test`</div>
 
-``````
+\`\`\`
 function test() {
   console.log('Hello world!");
 }
-``````
+\`\`\`
 ```
 
 1. Install ngx-build-plus
